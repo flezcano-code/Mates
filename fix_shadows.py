@@ -1,0 +1,157 @@
+with open('pokemon.html', 'r', encoding='utf-8') as f:
+    content = f.read()
+
+# 1. Update Shadows offset
+old_shadows_loop = (
+    "      // Loop de sincronización PERFECTA de sombras (60fps)\n"
+    "      function syncShadowsLoop() {\n"
+    "        const p = document.getElementById('playerSprite');\n"
+    "        const ps = document.getElementById('playerShadowSprite');\n"
+    "        if (p && ps) {\n"
+    "          if (p.style.display !== 'none' && p.style.opacity > 0 && p.src) {\n"
+    "            if (ps.src !== p.src) ps.src = p.src;\n"
+    "            ps.style.display = 'block';\n"
+    "            const t = window.getComputedStyle(p).transform;\n"
+    "            if (t !== 'none') {\n"
+    "              // Ajustamos translateY(-5px) para compensar el espacio en blanco inferior de los GIFs\n"
+    "              ps.style.transform = t + ` translateY(-5px) perspective(500px) rotateX(72deg) skewX(-10deg) scale(0.95, 1.0)`;\n"
+    "            } else {\n"
+    "              ps.style.transform = `translateY(-5px) perspective(500px) rotateX(72deg) skewX(-10deg) scale(0.95, 1.0)`;\n"
+    "            }\n"
+    "          } else {\n"
+    "            ps.style.display = 'none';\n"
+    "          }\n"
+    "        }\n"
+    "        \n"
+    "        const e = document.getElementById('enemySprite');\n"
+    "        const es = document.getElementById('enemyShadowSprite');\n"
+    "        if (e && es) {\n"
+    "          if (e.style.display !== 'none' && e.style.opacity > 0 && e.src) {\n"
+    "            if (es.src !== e.src) es.src = e.src;\n"
+    "            es.style.display = 'block';\n"
+    "            const t = window.getComputedStyle(e).transform;\n"
+    "            if (t !== 'none') {\n"
+    "              es.style.transform = t + ` translateY(-5px) perspective(500px) rotateX(72deg) skewX(10deg) scale(0.95, 1.0)`;\n"
+    "            } else {\n"
+    "              es.style.transform = `translateY(-5px) perspective(500px) rotateX(72deg) skewX(10deg) scale(0.95, 1.0)`;\n"
+    "            }\n"
+    "          } else {\n"
+    "            es.style.display = 'none';\n"
+    "          }\n"
+    "        }\n"
+    "        requestAnimationFrame(syncShadowsLoop);\n"
+    "      }"
+)
+new_shadows_loop = (
+    "      // Loop de sincronización PERFECTA de sombras (60fps)\n"
+    "      function syncShadowsLoop() {\n"
+    "        const p = document.getElementById('playerSprite');\n"
+    "        const ps = document.getElementById('playerShadowSprite');\n"
+    "        // Offset base mas alto para acercar sombra a los pies reales del sprite\n"
+    "        const sOff = -32;\n"
+    "        if (p && ps) {\n"
+    "          if (p.style.display !== 'none' && p.style.opacity > 0 && p.src) {\n"
+    "            if (ps.src !== p.src) ps.src = p.src;\n"
+    "            ps.style.display = 'block';\n"
+    "            const t = window.getComputedStyle(p).transform;\n"
+    "            if (t !== 'none') {\n"
+    "              ps.style.transform = t + ` translateY(${sOff}px) perspective(400px) rotateX(76deg) skewX(-12deg) scale(0.90, 1.0)`;\n"
+    "            } else {\n"
+    "              ps.style.transform = `translateY(${sOff}px) perspective(400px) rotateX(76deg) skewX(-12deg) scale(0.90, 1.0)`;\n"
+    "            }\n"
+    "          } else {\n"
+    "            ps.style.display = 'none';\n"
+    "          }\n"
+    "        }\n"
+    "        \n"
+    "        const e = document.getElementById('enemySprite');\n"
+    "        const es = document.getElementById('enemyShadowSprite');\n"
+    "        if (e && es) {\n"
+    "          if (e.style.display !== 'none' && e.style.opacity > 0 && e.src) {\n"
+    "            if (es.src !== e.src) es.src = e.src;\n"
+    "            es.style.display = 'block';\n"
+    "            const t = window.getComputedStyle(e).transform;\n"
+    "            if (t !== 'none') {\n"
+    "              es.style.transform = t + ` translateY(${sOff}px) perspective(400px) rotateX(76deg) skewX(12deg) scale(0.90, 1.0)`;\n"
+    "            } else {\n"
+    "              es.style.transform = `translateY(${sOff}px) perspective(400px) rotateX(76deg) skewX(12deg) scale(0.90, 1.0)`;\n"
+    "            }\n"
+    "          } else {\n"
+    "            es.style.display = 'none';\n"
+    "          }\n"
+    "        }\n"
+    "        requestAnimationFrame(syncShadowsLoop);\n"
+    "      }"
+)
+
+# 2. Update Origins
+old_origin = (
+    "        const startX = pRect.left - bfRect.left + pRect.width * 0.56\n"
+    "        const startY = pRect.top - bfRect.top + pRect.height * 0.52\n"
+    "        const endX = eRect.left - bfRect.left + eRect.width * 0.50\n"
+    "        const endY = eRect.top - bfRect.top + eRect.height * 0.52"
+)
+new_origin = (
+    "        // Origenes precisos para cada Pokemon (boca, manos, cañones, flor)\n"
+    "        const customOrigin = {\n"
+    "          'charmander': {x: 0.70, y: 0.45},\n"
+    "          'charmeleon': {x: 0.75, y: 0.35},\n"
+    "          'charizard': {x: 0.85, y: 0.30},\n"
+    "          'squirtle': {x: 0.75, y: 0.45},\n"
+    "          'wartortle': {x: 0.80, y: 0.35},\n"
+    "          'blastoise': {x: 0.88, y: 0.28},\n"
+    "          'bulbasaur': {x: 0.65, y: 0.35},\n"
+    "          'ivysaur': {x: 0.65, y: 0.15},\n"
+    "          'venusaur': {x: 0.65, y: 0.05},\n"
+    "          'pikachu': {x: 0.70, y: 0.50},\n"
+    "          'raichu': {x: 0.75, y: 0.45},\n"
+    "          'chikorita': {x: 0.65, y: 0.20},\n"
+    "          'bayleef': {x: 0.75, y: 0.15},\n"
+    "          'meganium': {x: 0.80, y: 0.15},\n"
+    "          'cyndaquil': {x: 0.70, y: 0.40},\n"
+    "          'quilava': {x: 0.75, y: 0.35},\n"
+    "          'typhlosion': {x: 0.80, y: 0.30},\n"
+    "          'totodile': {x: 0.75, y: 0.40},\n"
+    "          'croconaw': {x: 0.80, y: 0.35},\n"
+    "          'feraligatr': {x: 0.85, y: 0.30},\n"
+    "          'treecko': {x: 0.70, y: 0.40},\n"
+    "          'grovyle': {x: 0.75, y: 0.35},\n"
+    "          'sceptile': {x: 0.75, y: 0.35},\n"
+    "          'torchic': {x: 0.65, y: 0.40},\n"
+    "          'combusken': {x: 0.70, y: 0.30},\n"
+    "          'blaziken': {x: 0.80, y: 0.25},\n"
+    "          'mudkip': {x: 0.65, y: 0.40},\n"
+    "          'marshtomp': {x: 0.70, y: 0.35},\n"
+    "          'swampert': {x: 0.80, y: 0.30}\n"
+    "        };\n"
+    "        \n"
+    "        let ox = 0.56, oy = 0.52;\n"
+    "        for (let key in customOrigin) {\n"
+    "          if (srcName.includes(key)) {\n"
+    "             ox = customOrigin[key].x;\n"
+    "             oy = customOrigin[key].y;\n"
+    "             break;\n"
+    "          }\n"
+    "        }\n"
+    "\n"
+    "        const startX = pRect.left - bfRect.left + pRect.width * ox\n"
+    "        const startY = pRect.top - bfRect.top + pRect.height * oy\n"
+    "        const endX = eRect.left - bfRect.left + eRect.width * 0.50\n"
+    "        const endY = eRect.top - bfRect.top + eRect.height * 0.52"
+)
+
+if old_shadows_loop in content:
+    content = content.replace(old_shadows_loop, new_shadows_loop, 1)
+    print("SUCCESS: Shadows loop updated")
+else:
+    print("SHADOWS LOOP NOT FOUND")
+
+if old_origin in content:
+    content = content.replace(old_origin, new_origin, 1)
+    print("SUCCESS: Origins updated")
+else:
+    print("ORIGINS NOT FOUND")
+
+with open('pokemon.html', 'w', encoding='utf-8') as f:
+    f.write(content)
+print("DONE")
